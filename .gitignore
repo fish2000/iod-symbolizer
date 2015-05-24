@@ -3,3 +3,4 @@
 build/
 dist/
 symbolizer.egg-info/
+iod_symbolizer.egg-info/
