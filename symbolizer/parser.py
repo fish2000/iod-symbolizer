@@ -18,7 +18,7 @@ SUFFIXES = set((
 ))
 
 KEYWORDS = set((
-    "alignas", "alignof", "and", "and_eq", "asm", "auto",
+    "alignas", "alignof", "and", "and_eq", "assert", "asm", "auto",
     "bitand", "bitor", "bool", "break",
     "case", "catch", "char", "char16_t", "char32_t", "class",
     "compl", "const", "constexpr", "const_cast", "continue",

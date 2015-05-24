@@ -15,7 +15,7 @@ header_start_tpl = """
 header_num_symbol_tpl = """
 #ifndef IOD_SYMBOL_%(symbol)s
     #define IOD_SYMBOL_%(symbol)s
-    iod_define_number_symbol("%(symbol)s")
+    iod_define_number_symbol(%(symbol)s)
 #endif
 
 """
@@ -23,7 +23,7 @@ header_num_symbol_tpl = """
 header_std_symbol_tpl = """
 #ifndef IOD_SYMBOL_%(symbol)s
     #define IOD_SYMBOL_%(symbol)s
-    iod_define_symbol("%(symbol)s")
+    iod_define_symbol(%(symbol)s)
 #endif
 
 """
