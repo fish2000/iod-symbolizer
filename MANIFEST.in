@@ -1,6 +1,7 @@
+include .gitignore
+include IodSymbolize.cmake
 include README.md
 include requirements.txt
-include .gitignore
 include setup.py
 recursive-include test *
 recursive-include symbolizer *

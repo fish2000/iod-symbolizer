@@ -65,6 +65,7 @@ setup(
     platforms=['any'],
     
     include_package_data=True,
+    zip_safe=False,
     
     packages=[]+packages,
     
@@ -78,7 +79,10 @@ setup(
         ],
     },
     
-    package_data={},
+    package_data={
+        'symbolizer': [
+            '*.cmake'
+        ]},
     install_requires=['docopt', 'PyYAML'],
 
     classifiers=classifiers+[
