@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 __version__ = "0.0.1"
-exec(compile(open('symbolizer-version.py').read(),
-             'symbolizer-version.py', 'exec'))
+exec(compile(open('symbolizer/version.py').read(),
+             'symbolizer/version.py', 'exec'))
 
 name = 'symbolizer'
 long_name = 'iod-symbolizer'

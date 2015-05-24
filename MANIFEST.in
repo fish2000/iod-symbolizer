@@ -3,7 +3,6 @@ include requirements.txt
 include .gitignore
 include setup.py
 include setup.cfg
-include symbolizer-version.py
 include result.out
 recursive-include data *
 recursive-include docs *
