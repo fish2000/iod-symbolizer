@@ -1,0 +1,32 @@
+Metadata-Version: 1.1
+Name: iod-symbolizer
+Version: 0.1.0
+Summary: Parse C/C++/Objective-C/Objective-C++ source for IOD symbols and output header files
+Home-page: http://bitbucket.org/fish2000/iod-symbolizer
+Author: Alexander Bohn
+Author-email: fish2000@gmail.com
+License: GPLv2
+Download-URL: http://github.com/fish2000/iod-symbolizer/zipball/master
+Description: 
+            
+            iod-symbolizer - Parse C/C++/Objective-C/Objective-C++ source for IOD symbols and output header files.
+            
+        
+Keywords: IOD,C,C++,Objective-C,Objective-C++,C++11,C++14,Preprocessor,Parser,Symbols,Header
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Other Environment
+Classifier: Environment :: Plugins
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Topic :: Database
+Classifier: Topic :: Utilities
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: OS Independent
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: Implementation :: PyPy
