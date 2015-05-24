@@ -96,7 +96,7 @@ def cli(argv=None):
             print("> Writing output: %s" % output,
                 file=sys.stderr)
         with open(output, "wb") as fh:
-            fh.write(symbolizer.generate_header(symbols))
+            fh.write(templates.generate_header(symbols))
     
     # donezo.
     if verbose:
