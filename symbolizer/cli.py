@@ -19,7 +19,7 @@ import parser as symbolizer
 import sys
 
 __version__ = "0.0.1"
-exec(compile(open(join(dirname(dirname(__file__)), 'symbolizer-version.py')).read(),
+exec(compile(open(join(dirname(__file__), 'symbolizer-version.py')).read(),
              'symbolizer-version.py', 'exec'))
 
 def cli(argv=None):
