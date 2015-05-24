@@ -5,4 +5,7 @@ from parser import (
     SUFFIXES, KEYWORDS, SYMBOL_PREFIX,
     sanitizer, symbol_re, suffix_re,
     quotes, dbl_quotes, cpp_comments, c_comments, blockout,
-    collect_files, sanitize_suffixes, collect, parse_source_file)
+    collect_files, sanitize_suffixes, collect,
+    parse, parse_source_file)
+
+from templates import generate_header

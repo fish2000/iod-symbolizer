@@ -79,7 +79,7 @@ setup(
     },
     
     package_data={},
-    install_requires=['docopt'],
+    install_requires=['docopt', 'PyYAML'],
 
     classifiers=classifiers+[
         'License :: OSI Approved :: GNU General Public License (GPL)',

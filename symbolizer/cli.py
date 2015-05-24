@@ -1,21 +1,37 @@
 #!/usr/bin/env python
-"""
-Usage:
-  symbolizer DIR [DIR ...] [-o OUTFILE] [-V | --verbose]
-  symbolizer -h | --help | -v | --version
-    
-Options:
-  -o OUTFILE --output=OUTFILE       specify output file [default: stdout]
-  -V --verbose                      print verbose output
-  -h --help                         show this text
-  -v --version                      print version
-
-"""
 
 from __future__ import print_function
+import parser as symbolizer
+
+__doc__ = """
+Usage:
+  symbolizer (-c CONFIG.yml | DIR [DIR ...]
+                 [-r ROOTDIR] [-o OUTPUT]
+    [--numeric] [--mixedcase] [--uppercase]
+                    [-S suf,fix,es,etc ...]
+                    [-R r,r0,r1,r2,etc ...])
+             [-V | --verbose]
+  symbolizer  -h | --help
+  symbolizer  -v | --version
+    
+Options:
+  -c CONFIG.yml --config=CONFIG.yml    read options from CONFIG.yml (overrides CLI)
+  -r ROOTDIR --root=ROOTDIR            root dir for resolving paths [default: CWD]
+  -o OUTPUT --output=OUTPUT            output file [default: stdout]
+  --numeric                            symbolize 8754 (numeric) tokens [default: false]
+  --mixedcase                          symbolize Mixed_Case_Tokens [default: false]
+  --uppercase                          symbolize UPPER_CASE_TOKENS [default: false]
+  -S suf,fix,es --suffixes=suf,fix,es  file suffixes to parse [default: %s]
+  -R r,r0,r1,r2 --reserved=r,r0,r1,r2  extra reserved words (DON'T symbolize these)
+  -V --verbose                         print verbose output
+  -h --help                            show this text
+  -v --version                         print version
+
+""" % ", ".join(tuple(symbolizer.SUFFIXES))
+
 from os.path import join, isdir, dirname
 from docopt import docopt
-import parser as symbolizer
+import templates
 import sys
 
 __version__ = "0.0.1"
@@ -36,6 +52,7 @@ def cli(argv=None):
     
     verbose = arguments.pop('--verbose', False)
     output = arguments.pop('--output')
+    
     directories = arguments.pop('DIR', [])
     if not directories:
         print("ERROR: Need to specify a directory to scan",
@@ -72,14 +89,14 @@ def cli(argv=None):
                 file=sys.stderr)
     if output == "stdout":
         print()
-        print(symbolizer.generate_header(symbols))
+        print(templates.generate_header(symbols))
         print()
     else:
         if verbose:
             print("> Writing output: %s" % output,
                 file=sys.stderr)
         with open(output, "wb") as fh:
-            fh.write(symbolizer.generate_header(symbols))
+            fh.write(templates.generate_header(symbols))
     
     # donezo.
     if verbose:
