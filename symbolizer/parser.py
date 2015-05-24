@@ -7,7 +7,7 @@ import functools
 from datetime import datetime
 from itertools import ifilter, imap
 from os import walk
-from os.path import join
+from os.path import join, expanduser
 
 SUFFIXES = set((
     r"c",
@@ -62,7 +62,7 @@ def collect_files(root_dir, suffixes):
     """
     collected = set()
     # print(list(suffixes))
-    for pth, dirs, files in walk(root_dir):
+    for pth, dirs, files in walk(expanduser(root_dir)):
         # print("> Scanning directory %s (%i files)..." % (pth, len(files)))
         found = set(imap(lambda file: join(pth, file),
             ifilter(lambda file: suffix_re.search(file, re.IGNORECASE), files)))
