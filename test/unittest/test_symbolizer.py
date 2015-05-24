@@ -102,19 +102,19 @@ sample_header = """
 
 #ifndef IOD_SYMBOL_signature
     #define IOD_SYMBOL_signature
-    iod_define_symbol("signature")
+    iod_define_symbol(signature)
 #endif
 
 
 #ifndef IOD_SYMBOL_compression_level
     #define IOD_SYMBOL_compression_level
-    iod_define_symbol("compression_level")
+    iod_define_symbol(compression_level)
 #endif
 
 
 #ifndef IOD_SYMBOL_backend
     #define IOD_SYMBOL_backend
-    iod_define_symbol("backend")
+    iod_define_symbol(backend)
 #endif
 
 """
