@@ -46,7 +46,6 @@ KEYWORDS = set((
 SYMBOL_PREFIX = r'_'
 
 sanitizer = re.compile(r'\W+')
-# symbol_re = re.compile(r"(?:\w+)%s([a-zA-Z][0-9a-zA-Z_]+)(?!_t)" % SYMBOL_PREFIX)
 symbol_re = re.compile(r"(?:\s+)(?:%s)([0-9a-z][0-9a-z_]+)(?!_t)" % SYMBOL_PREFIX)
 suffix_re = re.compile(r"(%s)$" % ("|".join(map(
     lambda suffix: r"\.%s" % suffix, SUFFIXES))))
@@ -178,6 +177,7 @@ class Parser(object):
                 symbol_init_range,
                 symbol_main_range))
         
+        self.keywords |= set(arguments.pop('--reserved', []))
         self.suffixes |= set(arguments.pop('--suffixes', []))
         self.suffix_re = re.compile(r"(%s)$" % ("|".join(map(
             lambda suffix: r"\.%s" % suffix, list(self.suffixes)))))

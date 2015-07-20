@@ -39,7 +39,7 @@ class ParserObjectTests(unittest.TestCase):
         self.tmps = []
         self.userpath = expanduser('~')
         self.user = split(self.userpath)[1]
-        self.parser = symbolizer.Symbolizer(**sample.arguments)
+        self.parser = symbolizer.Parser(**sample.arguments)
     
     def tearDown(self):
         from os import remove

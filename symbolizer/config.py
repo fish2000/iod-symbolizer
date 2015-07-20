@@ -17,6 +17,8 @@ def parse(configuration, check=True):
     for sourcedir in config_dict['source']:
         assert isdir(join(root, sourcedir))
     
+    if 'verbose' in config_dict:
+        assert config_dict['verbose'] is bool(config_dict['verbose'])
     if 'suffixes' in config_dict:
         assert len(config_dict['suffixes']) > 0
     if 'reserved' in config_dict:

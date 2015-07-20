@@ -128,6 +128,7 @@ arguments = {
 
 config = """
 
+verbose: true
 root: ~/Dropbox/libimread
 
 source:
