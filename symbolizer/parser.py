@@ -3,9 +3,10 @@
 from __future__ import print_function
 
 import re
+import sys
 import functools
 from itertools import ifilter, imap
-from os.path import join, expanduser, abspath, isdir, isabs
+from os.path import join, expanduser, abspath, isdir
 from os import walk, getcwd
 
 SUFFIXES = set((
@@ -91,28 +92,70 @@ def parse_source_file(file_name):
         source_file = fh.read()
     return parse(source_file)
 
+def err(_, text="", **kwargs):
+    print(text, file=sys.stderr)
+
+def noop(_, *args, **kwargs):
+    pass
+
+class ParserArgumentError(ValueError):
+    pass
+
 class Parser(object):
     
     quotes          = re.compile(r"'(.*)'",     re.MULTILINE)
     dbl_quotes      = re.compile(r'"(.*)"',     re.MULTILINE)
     cpp_comments    = re.compile(r'//(.*)\n',   re.MULTILINE)
     c_comments      = re.compile(r'/\*(.*)\*/', re.MULTILINE)
-    blockout        = lambda match: "#" * len(match.group(0))
+    blockout        = lambda cls, match: "#" * len(match.group(0))
+    
+    @staticmethod
+    def read(file_name):
+        from os.path import expanduser, isfile
+        file_name = expanduser(file_name)
+        if not isfile(file_name):
+            raise IOError("nothing to read from path: %s" % file_name)
+        with open(file_name, "rb") as fh:
+            contents = fh.read()
+        return contents
+    
+    @staticmethod
+    def write(file_name, with_what="", overwrite=True):
+        from os.path import expanduser, isfile
+        file_name = expanduser(file_name)
+        if not overwrite and isfile(file_name):
+            raise IOError("won't overwrite to path: %s" % file_name)
+        if not with_what:
+            raise IOError("nothing to write to path: %s" % file_name)
+        with open(file_name, "wb") as fh:
+            fh.write(with_what)
+    
+    @classmethod
+    def tmpwrite(cls, with_what="", suffix=".tmp"):
+        import tempfile
+        tf = tempfile.mktemp(suffix=suffix)
+        cls.write(tf, with_what=with_what, overwrite=False)
+        return tf
+    
+    @classmethod
+    def err(cls, message=None):
+        if not message:
+            message = "error in parser arguments"
+        return ParserArgumentError(message)
     
     def __init__(self, *args, **arguments):
-        super(Parser, self).__init__(args, arguments)
+        super(Parser, self).__init__()
         
-        self.suffixes = SUFFIXES
         self.keywords = KEYWORDS
-        self.dirs = set()
+        self.suffixes = SUFFIXES
         self.collected = set()
         self.symbols = set()
-        self.symbol_re = re.compile(
-            r"(?:\s+)(?:%s)([0-9a-z][0-9a-z_]+)(?!_t)" % SYMBOL_PREFIX)
         
         self.verbose = arguments.pop('--verbose', False)
+        self.pp = self.verbose and err or noop
         
         symbolize_opts = dict(
+            prefix=arguments.pop('--prefix', SYMBOL_PREFIX),
             numeric=arguments.pop('--numeric', False),
             mixedcase=arguments.pop('--mixedcase', False),
             uppercase=arguments.pop('--uppercase', False))
@@ -131,37 +174,20 @@ class Parser(object):
         
         self.symbol_re = re.compile(
             r"(?:\s+)(?:%s)([%s][%s]+)(?!_t)" % (
-                SYMBOL_PREFIX,
+                symbolize_opts['prefix'],
                 symbol_init_range,
                 symbol_main_range))
         
-        suffixes = arguments.pop('--suffixes', None)
-        if suffixes:
-            self.suffixes = sanitize_suffixes(suffixes)
-        
+        self.suffixes |= set(arguments.pop('--suffixes', []))
         self.suffix_re = re.compile(r"(%s)$" % ("|".join(map(
-            lambda suffix: r"\.%s" % suffix, self.suffixes))))
+            lambda suffix: r"\.%s" % suffix, list(self.suffixes)))))
         
-        root = arguments.pop('--root')
-        if root == "CWD":
-            root = abspath(getcwd())
-        else:
-            root = abspath(root)
-        if not isdir(root):
-            raise IOError("Bad root dir: %s" % root)
-        
-        for directory in arguments['DIR']:
-            if isabs(directory):
-                self.dirs.add(directory)
-            else:
-                dd = join(root, directory)
-                if isdir(dd):
-                    self.dirs.add(dd)
-                else:
-                    raise IOError("DIR WTF: %s" % dd)
+        self.root = arguments.pop('--root', "CWD")
+        self.directories = arguments.pop('DIR', [])
     
-    def collect(self, root_dir):
-        for pth, dirs, files in walk(expanduser(root_dir)):
+    def collect(self, collect_root):
+        self.pp("> Scanning directory: %s" % collect_root)
+        for pth, dirs, files in walk(collect_root):
             found = set(imap(lambda file: join(pth, file),
                 ifilter(lambda file: self.suffix_re.search(file, re.IGNORECASE), files)))
             self.collected |= found
@@ -181,27 +207,84 @@ class Parser(object):
             sym = set()
         self.symbols |= sym - self.keywords
     
-    def parse_source_file(self, file_name):
-        with open(file_name, "rb") as fh:
-            source_file = fh.read()
-        self.parse(source_file)
+    def parse_file(self, file_name):
+        self.pp("> Parsing source: %s" % file_name)
+        self.parse(self.read(file_name))
     
     def parse_collected(self):
-        for source_file in self.collected:
-            self.parse_source_file(source_file)
+        for source_file in self.files:
+            self.parse_file(source_file)
     
-    def __len__(self):
-        return len(self.symbols)
+    @property
+    def root(self):
+        return getattr(self, 'rootdir', getcwd())
+    
+    @root.setter
+    def root(self, root):
+        if root == "CWD":
+            root = abspath(getcwd())
+        else:
+            root = abspath(expanduser(root))
+        if not isdir(root):
+            raise IOError("Bad root dir: %s" % root)
+        self.rootdir = root
+    
+    @property
+    def suffixes(self):
+        return getattr(self, 'sufs', SUFFIXES)
+    
+    @suffixes.setter
+    def suffixes(self, sufs):
+        if not hasattr(self, 'sufs'):
+            self.sufs = set()
+        if sufs:
+            self.sufs |= sanitize_suffixes(*sufs)
     
     @property
     def directories(self):
-        return tuple(self.symbols)
+        return tuple(getattr(self, 'dirs', set()))
+    
+    @directories.setter
+    def directories(self, dirlist):
+        self.dirs = set()
+        if not dirlist:
+            raise self.err("ERROR: Need to specify a directory to scan")
+        for directory in dirlist:
+            if isdir(abspath(directory)):
+                self.dirs.add(abspath(directory))
+            elif isdir(abspath(expanduser(directory))):
+                self.dirs.add(abspath(expanduser(directory)))
+            else:
+                dd = abspath(join(self.root, directory))
+                if isdir(dd):
+                    self.dirs.add(dd)
+                else:
+                    # raise self.err("DIR WTF: %s" % dd)
+                    self.pp("ERROR: Not a directory")
+                    self.pp("\t%s" % directory)
     
     @property
     def files(self):
-        return tuple(self.collected)
+        return tuple(getattr(self, 'collected', set()))
     
     @property
-    def symbols(self):
-        return tuple(self.symbols)
-
+    def symtab(self):
+        return getattr(self, 'symbols', set())
+    
+    @property
+    def values(self):
+        return tuple(self.symtab)
+    
+    def __len__(self):
+        return len(self.symtab)
+    
+    def __iter__(self):
+        return self.values
+    
+    def __contains__(self, symbol):
+        return symbol in self.symtab
+    
+    def next(self):
+        if len(self) > 0:
+            return self.values.next()
+        raise StopIteration

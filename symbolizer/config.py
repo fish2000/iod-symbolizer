@@ -4,6 +4,9 @@ from __future__ import print_function
 import yaml
 from os.path import join, isdir, isfile, expanduser
 
+class ConfigError(ValueError):
+    pass
+
 def parse(configuration, check=True):
     config_dict = yaml.safe_load(configuration)
     if not check:
@@ -24,7 +27,7 @@ def parse(configuration, check=True):
         targfile = join(root, target.get('file'))
         if not target.get('overwrite'):
             if isfile(targfile):
-                raise IOError("File output target exists,\n"
-                              "but configuration forbids overwriting\n")
+                raise ConfigError("File output target exists,\n"
+                                  "but configuration forbids overwriting\n")
     return config_dict
 

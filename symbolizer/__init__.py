@@ -8,4 +8,6 @@ from parser import (
     collect_files, sanitize_suffixes, collect,
     parse, parse_source_file)
 
+from parser import Parser as Symbolizer
+
 from templates import generate_header

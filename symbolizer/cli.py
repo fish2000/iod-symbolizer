@@ -85,14 +85,15 @@ def cli(argv=None):
     
     # generate header
     pp("> Generating header:")
+    header = templates.generate_header(symbols)
     if output == "stdout":
         print()
-        print(templates.generate_header(symbols))
+        print(header)
         print()
     else:
         pp("> Writing output: %s" % output)
         with open(output, "wb") as fh:
-            fh.write(templates.generate_header(symbols))
+            fh.write(header)
     
     # donezo.
     pp("> Done.")
