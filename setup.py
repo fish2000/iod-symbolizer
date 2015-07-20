@@ -59,7 +59,7 @@ setup(
 
     author=u"Alexander Bohn",
     author_email='fish2000@gmail.com',
-    url='http://bitbucket.org/fish2000/%s' % long_name,
+    url='http://github.com/fish2000/%s' % long_name,
     license='GPLv2',
     keywords=', '.join(keywords),
     platforms=['any'],

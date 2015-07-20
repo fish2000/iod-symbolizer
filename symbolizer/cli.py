@@ -38,6 +38,12 @@ __version__ = "0.0.1"
 exec(compile(open(join(dirname(__file__), 'version.py')).read(),
              'version.py', 'exec'))
 
+def err(text="", **kwargs):
+    print(text, file=sys.stderr)
+
+def noop(*args, **kwargs):
+    pass
+
 def cli(argv=None):
     if not argv:
         argv = sys.argv
@@ -52,55 +58,44 @@ def cli(argv=None):
     
     verbose = arguments.pop('--verbose', False)
     output = arguments.pop('--output')
+    pp = verbose and err or noop
     
     directories = arguments.pop('DIR', [])
     if not directories:
-        print("ERROR: Need to specify a directory to scan",
-            file=sys.stderr)
-        print(__doc__)
+        err("ERROR: Need to specify a directory to scan")
+        err(__doc__)
     
     # check directories
     for directory in directories:
         if not isdir(directory):
-            print("ERROR: not a directory:",
-                file=sys.stderr)
-            print("\t%s" % directory,
-                file=sys.stderr)
+            err("ERROR: not a directory:")
+            err("\t%s" % directory)
     
     # scan directories
     symbols = set()
     collected = set()
     for directory in directories:
-        if verbose:
-            print("> Scanning directory: %s" % directory,
-                file=sys.stderr)
+        pp("> Scanning directory: %s" % directory)
         collected |= symbolizer.collect(directory)
     
     # parse collected source files
     for source_file in sorted(collected):
-        if verbose:
-            print("> Parsing source: %s" % source_file,
-                file=sys.stderr)
+        pp("> Parsing source: %s" % source_file)
         symbols |= symbolizer.parse_source_file(source_file)
     
     # generate header
-    if verbose:
-        print("> Generating header:",
-                file=sys.stderr)
+    pp("> Generating header:")
     if output == "stdout":
         print()
         print(templates.generate_header(symbols))
         print()
     else:
-        if verbose:
-            print("> Writing output: %s" % output,
-                file=sys.stderr)
+        pp("> Writing output: %s" % output)
         with open(output, "wb") as fh:
             fh.write(templates.generate_header(symbols))
     
     # donezo.
-    if verbose:
-        print("> Done.")
+    pp("> Done.")
 
 
 if __name__ == '__main__':
