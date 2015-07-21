@@ -7,6 +7,7 @@ import unittest2 as unittest
 import symbolizer
 import sample
 
+
 class SymbolizerTests(unittest.TestCase):
     
     def setUp(self):
@@ -114,9 +115,7 @@ testsuite = lambda suites: unittest.TestSuite([testload(suite) for suite in suit
 testrun = lambda *suites: unittest.TextTestRunner(verbosity=VERBOSITY).run(testsuite(suites))
 
 if __name__ == '__main__':
-    # unittest.main()
     testrun(
         SymbolizerTests,
         ParserObjectTests,
-        ConfigTests
-    )
+        ConfigTests)

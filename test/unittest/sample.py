@@ -25,9 +25,8 @@ namespace im {
     using namespace symbols::s;
     
     auto options =
-    D(
-        _compression_level     = -1,
-        _backend               = "io_png"
+    D(_compression_level     = -1,
+      _backend               = "io_png"
     );
     */
     
