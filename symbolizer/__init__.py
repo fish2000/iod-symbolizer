@@ -9,5 +9,4 @@ from parser import (
     parse, parse_source_file)
 
 from parser import Parser
-
 from templates import generate_header

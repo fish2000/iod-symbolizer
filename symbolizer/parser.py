@@ -259,7 +259,6 @@ class Parser(object):
                 if isdir(dd):
                     self.dirs.add(dd)
                 else:
-                    # raise self.err("DIR WTF: %s" % dd)
                     self.pp("ERROR: Not a directory")
                     self.pp("\t%s" % directory)
     

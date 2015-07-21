@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-
 from collections import defaultdict, namedtuple
-# from operator import itemgetter
 
 def autoincrementer():
     """ Get an independantly auto-incrementing unary function """
