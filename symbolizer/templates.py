@@ -30,7 +30,7 @@ header_std_symbol_tpl = """
 
 def generate_header(symbol_set, when=None):
     if when is None:
-        when is datetime.now().isoformat()
+        when = datetime.now().isoformat()
     
     header_out = header_start_tpl % when
     
