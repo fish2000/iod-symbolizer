@@ -93,6 +93,9 @@ header = """
 /// IOD library by Matthieu Garrigues -- https://github.com/matt-42/iod
 ///
 
+#ifndef IOD_SYMBOLYZER_OUTPUT_HEADER_TEMPLATE_
+#define IOD_SYMBOLYZER_OUTPUT_HEADER_TEMPLATE_
+
 #include <iod/symbol.hh>
 
 
@@ -113,6 +116,8 @@ header = """
     iod_define_symbol(backend)
 #endif
 
+
+#endif /// IOD_SYMBOLYZER_OUTPUT_HEADER_TEMPLATE_
 """
 
 output_file = tempfile.NamedTemporaryFile(suffix='.hpp')

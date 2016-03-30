@@ -110,12 +110,12 @@ class ConfigTests(unittest.TestCase):
 
 VERBOSITY = 2
 
-testload = lambda testmod: unittest.TestLoader().loadTestsFromTestCase(testmod)
-testsuite = lambda suites: unittest.TestSuite([testload(suite) for suite in suites])
-testrun = lambda *suites: unittest.TextTestRunner(verbosity=VERBOSITY).run(testsuite(suites))
+# testload = lambda testmod: unittest.TestLoader().loadTestsFromTestCase(testmod)
+# testsuite = lambda suites: unittest.TestSuite([testload(suite) for suite in suites])
+# testrun = lambda *suites: unittest.TextTestRunner(verbosity=VERBOSITY).run(testsuite(suites))
 
-if __name__ == '__main__':
-    testrun(
-        SymbolizerTests,
-        ParserObjectTests,
-        ConfigTests)
+# if __name__ == '__main__':
+#     testrun(
+#         SymbolizerTests,
+#         ParserObjectTests,
+#         ConfigTests)

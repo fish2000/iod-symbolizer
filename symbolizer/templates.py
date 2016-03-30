@@ -8,8 +8,15 @@ header_start_tpl = """
 /// IOD library by Matthieu Garrigues -- https://github.com/matt-42/iod
 ///
 
+#ifndef IOD_SYMBOLYZER_OUTPUT_HEADER_TEMPLATE_
+#define IOD_SYMBOLYZER_OUTPUT_HEADER_TEMPLATE_
+
 #include <iod/symbol.hh>
 
+"""
+
+header_end_tpl = """
+#endif /// IOD_SYMBOLYZER_OUTPUT_HEADER_TEMPLATE_
 """
 
 header_num_symbol_tpl = """
@@ -43,5 +50,7 @@ def generate_header(symbol_set, when=None):
         else:
             # ok, it's a number
             header_out += header_num_symbol_tpl % dict(symbol=symbol)
+    
+    header_out += header_end_tpl
     
     return header_out
