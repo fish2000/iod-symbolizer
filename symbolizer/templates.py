@@ -41,7 +41,7 @@ def generate_header(symbol_set, when=None):
     
     header_out = header_start_tpl % when
     
-    for symbol in symbol_set:
+    for symbol in sorted(symbol_set):
         try:
             int(symbol)
         except ValueError:
