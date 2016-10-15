@@ -1,17 +1,20 @@
 #!/usr/bin/env python
-# encoding: UTF-8
+# -*- coding: utf-8 -*-
 
 from __future__ import print_function
 
 import unittest2 as unittest
-import symbolizer
 import sample
+from test import import_local_symbolizer
+symbolizer = import_local_symbolizer()
+u = symbolizer.symbolizer_unicode
 
+MAX_DIFF = 2500
 
 class SymbolizerTests(unittest.TestCase):
     
     def setUp(self):
-        self.maxDiff = 1000
+        self.maxDiff = MAX_DIFF
     
     def test_symbolize(self):
         source_edit = (sample.input,)
@@ -29,8 +32,8 @@ class SymbolizerTests(unittest.TestCase):
         self.assertEqual(symbolizer.parse(sample.input), sample.output)
     
     def test_generate_header(self):
-        header = symbolizer.generate_header(sample.output, when="RIGHT NOW")
-        self.assertEqual(header.strip(), sample.header.strip())
+        header = symbolizer.generate_header(sorted(sample.output), when="RIGHT NOW")
+        self.assertMultiLineEqual(header, sample.header)
 
 
 class ParserObjectTests(unittest.TestCase):
@@ -41,6 +44,7 @@ class ParserObjectTests(unittest.TestCase):
         self.userpath = expanduser('~')
         self.user = split(self.userpath)[1]
         self.parser = symbolizer.Parser(**sample.arguments)
+        self.maxDiff = MAX_DIFF
     
     def tearDown(self):
         from os import remove
@@ -70,8 +74,8 @@ class ParserObjectTests(unittest.TestCase):
         self.assertEqual(self.parser.symtab, sample.output)
     
     def test_generate_header(self):
-        header = symbolizer.generate_header(sample.output, when="RIGHT NOW")
-        self.assertEqual(header.strip(), sample.header.strip())
+        header = symbolizer.generate_header(sorted(sample.output), when="RIGHT NOW")
+        self.assertMultiLineEqual(header, sample.header)
     
     def test_parser_object_property_root(self):
         from os.path import expanduser
@@ -92,6 +96,9 @@ from symbolizer import config
 from os.path import join, isdir, expanduser
 
 class ConfigTests(unittest.TestCase):
+    
+    def setUp(self):
+        self.maxDiff = MAX_DIFF
     
     def test_parse_config(self):
         config_dict = config.parse(sample.config)
@@ -119,3 +126,6 @@ VERBOSITY = 2
 #         SymbolizerTests,
 #         ParserObjectTests,
 #         ConfigTests)
+
+if __name__ == '__main__':
+    pass

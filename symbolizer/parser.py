@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from __future__ import print_function
 
@@ -11,11 +12,11 @@ from os import walk, getcwd
 
 SUFFIXES = set((
     r"c",
-    r"cc", r"cpp", r"cxx", r"c++",
+    r"cc", r"cpp", r"cxx", r"c\+\+",
     r"m",
-    r"mm", r"mpp", r"mxx", r"m++",
+    r"mm", r"mpp", r"mxx", r"m\+\+",
     r"h",
-    r"hh", r"hpp", r"hxx", r"h++",
+    r"hh", r"hpp", r"hxx", r"h\+\+",
     r"inl"
 ))
 
@@ -73,7 +74,7 @@ def collect_files(root_dir, suffixes):
 def sanitize_suffixes(*suffixes):
     """ Ensure suffixes (which may be passed in from the user) are clean
     """
-    return set((sanitizer.sub('', suffix.lower()) for suffix in suffixes))
+    return set((suffix.lower() for suffix in suffixes))
 
 collect = functools.partial(collect_files, suffixes=list(sanitize_suffixes(*SUFFIXES)))
 
