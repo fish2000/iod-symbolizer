@@ -11,10 +11,11 @@ from os import walk, getcwd
 
 SUFFIXES = set((
     r"c",
-    r"cc", r"cpp", r"cxx",
-    r"m", r"mm",
+    r"cc", r"cpp", r"cxx", r"c++",
+    r"m",
+    r"mm", r"mpp", r"mxx", r"m++",
     r"h",
-    r"hh", r"hpp", r"hxx",
+    r"hh", r"hpp", r"hxx", r"h++",
     r"inl"
 ))
 
