@@ -17,7 +17,7 @@ def autoincrementer():
 
 class AutoInc(object):
     # Get a uniquely auto-incremented integer value
-    __slots__ = ('v',)
+    __slots__ = 'v'
     
     def __init__(self, value=0):
         try:
@@ -56,6 +56,7 @@ class Histogram(defaultdict):
         return AutoInc()
     
     def __init__(self, *args, **kwargs):
+        
         if len(args) and not len(kwargs):
             for arg in args:
                 argcls_name = arg.__class__.__name__
@@ -65,8 +66,8 @@ class Histogram(defaultdict):
                 else:
                     # normal arg: column name
                     kwargs.update({ arg: AutoInc() })
-        super(Histogram, self).__init__(
-            Histogram.autoinc, *tuple(), **kwargs)
+        
+        super(Histogram, self).__init__(Histogram.autoinc, **kwargs)
     
     def prettyprint(self, **kwargs):
         from pprint import pformat
